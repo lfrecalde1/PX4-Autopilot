@@ -73,9 +73,6 @@
 // Lirary for the Gyro
 #include <uORB/topics/sensor_gyro.h>
 
-// RPM
-#include <uORB/topics/esc_status.h>
-
 using namespace time_literals;
 
 class MulticopterRateControl : public ModuleBase<MulticopterRateControl>, public ModuleParams, public px4::WorkItem
@@ -116,7 +113,6 @@ private:
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 
 	// New subscriptions
-	uORB::Subscription _vehicle_esc_sub{ORB_ID(esc_status)};
 	uORB::Subscription _vehicle_acc_setpoint_sub{ORB_ID(vehicle_angular_acceleration_setpoint)};
 	uORB::Subscription _vehicle_sensor_gyro_sub{ORB_ID(sensor_gyro)};
 
@@ -142,7 +138,6 @@ private:
 	vehicle_status_s	_vehicle_status{};
 
 	// ESC, Gyr, angular velocity subscriptions
-	esc_status_s _esc_status{};
 	sensor_gyro_s _sensor_gyro{};
 	vehicle_angular_acceleration_setpoint_s _vehicle_angular_acceleration_setpoint{};
 
