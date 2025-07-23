@@ -74,6 +74,9 @@ publications:
   - topic: /fmu/out/airspeed_validated
     type: px4_msgs::msg::AirspeedValidated
 
+  - topic: eagle4/fmu/out/esc_status
+    type: px4_msgs::msg::EscStatus
+
 # Create uORB::Publication
 subscriptions:
   - topic: /fmu/in/register_ext_component_request

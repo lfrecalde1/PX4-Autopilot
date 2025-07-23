@@ -41,7 +41,7 @@ parameters:
                     Note that this requires ESCs that support bidirectional DSHot, e.g. BlHeli32.
                     This is not the same as DShot telemetry which requires an additional serial connection.
             type: boolean
-            default: 0
+            default: 1
             reboot_required: true
         DSHOT_3D_DEAD_H:
             description:
