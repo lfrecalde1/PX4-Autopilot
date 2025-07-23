@@ -61,6 +61,21 @@
 #include <uORB/topics/vehicle_thrust_setpoint.h>
 #include <uORB/topics/vehicle_torque_setpoint.h>
 
+// Library to publish the control actions
+#include <uORB/topics/debug_vect.h>
+
+// Library for a filter
+#include <lib/mathlib/math/filter/LowPassFilter2p.hpp>
+
+// Library for the desired andgular acceleration
+#include <uORB/topics/vehicle_angular_acceleration_setpoint.h>
+
+// Lirary for the Gyro
+#include <uORB/topics/sensor_gyro.h>
+
+// RPM
+#include <uORB/topics/esc_status.h>
+
 using namespace time_literals;
 
 class MulticopterRateControl : public ModuleBase<MulticopterRateControl>, public ModuleParams, public px4::WorkItem
@@ -100,19 +115,41 @@ private:
 	uORB::Subscription _vehicle_rates_setpoint_sub{ORB_ID(vehicle_rates_setpoint)};
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 
+	// New subscriptions
+	uORB::Subscription _vehicle_esc_sub{ORB_ID(esc_status)};
+	uORB::Subscription _vehicle_acc_setpoint_sub{ORB_ID(vehicle_angular_acceleration_setpoint)};
+	uORB::Subscription _vehicle_sensor_gyro_sub{ORB_ID(sensor_gyro)};
+
+
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
 
+	// Eveything is going to be running almost at the frequency of the angular velocity since this controller depends on the angular velocity of the quadrotor
 	uORB::SubscriptionCallbackWorkItem _vehicle_angular_velocity_sub{this, ORB_ID(vehicle_angular_velocity)};
 
 	uORB::Publication<actuator_controls_status_s>	_actuator_controls_status_pub{ORB_ID(actuator_controls_status_0)};
 	uORB::PublicationMulti<rate_ctrl_status_s>	_controller_status_pub{ORB_ID(rate_ctrl_status)};
 	uORB::Publication<vehicle_rates_setpoint_s>	_vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};
+
+	// Control actions publisher
+	uORB::Publication<debug_vect_s> _control_debug_pub{ORB_ID(debug_vect)};
+	//
+
+
 	uORB::Publication<vehicle_torque_setpoint_s>	_vehicle_torque_setpoint_pub;
 	uORB::Publication<vehicle_thrust_setpoint_s>	_vehicle_thrust_setpoint_pub;
 
 	vehicle_control_mode_s	_vehicle_control_mode{};
 	vehicle_status_s	_vehicle_status{};
 
+	// ESC, Gyr, angular velocity subscriptions
+	esc_status_s _esc_status{};
+	sensor_gyro_s _sensor_gyro{};
+	vehicle_angular_acceleration_setpoint_s _vehicle_angular_acceleration_setpoint{};
+
+	// Publisher control actions
+	debug_vect_s control_debug{};
+
+	// Parameters
 	bool _landed{true};
 	bool _maybe_landed{true};
 
@@ -126,6 +163,8 @@ private:
 
 	float _battery_status_scale{0.0f};
 	matrix::Vector3f _thrust_setpoint{};
+	matrix::Vector3f _angular_acc_setpoint{};
+	matrix::Vector3f _gyro_angular_velocity{};
 
 	float _energy_integration_time{0.0f};
 	float _control_energy[4] {};

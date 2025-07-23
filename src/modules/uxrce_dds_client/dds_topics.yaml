@@ -17,8 +17,8 @@ publications:
   - topic: /fmu/out/battery_status
     type: px4_msgs::msg::BatteryStatus
 
-  - topic: /fmu/out/collision_constraints
-    type: px4_msgs::msg::CollisionConstraints
+  #- topic: /fmu/out/collision_constraints
+  #  type: px4_msgs::msg::CollisionConstraints
 
   - topic: /fmu/out/estimator_status_flags
     type: px4_msgs::msg::EstimatorStatusFlags
@@ -41,8 +41,10 @@ publications:
   - topic: /fmu/out/timesync_status
     type: px4_msgs::msg::TimesyncStatus
 
-  # - topic: /fmu/out/vehicle_angular_velocity
-  #   type: px4_msgs::msg::VehicleAngularVelocity
+  # Angular Velocity and anglar acceleration
+
+  - topic: /fmu/out/vehicle_angular_velocity
+    type: px4_msgs::msg::VehicleAngularVelocity
 
   - topic: /fmu/out/vehicle_land_detected
     type: px4_msgs::msg::VehicleLandDetected
@@ -56,11 +58,11 @@ publications:
   - topic: /fmu/out/vehicle_command_ack
     type: px4_msgs::msg::VehicleCommandAck
 
-  - topic: /fmu/out/vehicle_global_position
-    type: px4_msgs::msg::VehicleGlobalPosition
+  #- topic: /fmu/out/vehicle_global_position
+  #  type: px4_msgs::msg::VehicleGlobalPosition
 
-  - topic: /fmu/out/vehicle_gps_position
-    type: px4_msgs::msg::SensorGps
+  #- topic: /fmu/out/vehicle_gps_position
+  #  type: px4_msgs::msg::SensorGps
 
   - topic: /fmu/out/vehicle_local_position
     type: px4_msgs::msg::VehicleLocalPosition
@@ -71,11 +73,23 @@ publications:
   - topic: /fmu/out/vehicle_status
     type: px4_msgs::msg::VehicleStatus
 
-  - topic: /fmu/out/airspeed_validated
-    type: px4_msgs::msg::AirspeedValidated
+  #- topic: /fmu/out/airspeed_validated
+  #  type: px4_msgs::msg::AirspeedValidated
 
-  - topic: eagle4/fmu/out/esc_status
+  # ESC RPM of the quadrotor
+  - topic: /fmu/out/esc_status
     type: px4_msgs::msg::EscStatus
+  
+  # Control Actions
+  - topic: /fmu/out/debug_vect
+    type: px4_msgs::msg::DebugVect
+
+  # Thrust and torque setpoint from the rate controller
+  - topic: /fmu/out/vehicle_thrust_setpoint
+    type: px4_msgs::msg::VehicleThrustSetpoint
+
+  - topic: /fmu/out/vehicle_torque_setpoint
+    type: px4_msgs::msg::VehicleTorqueSetpoint
 
 # Create uORB::Publication
 subscriptions:
@@ -100,8 +114,8 @@ subscriptions:
   - topic: /fmu/in/config_control_setpoints
     type: px4_msgs::msg::VehicleControlMode
 
-  - topic: /fmu/in/distance_sensor
-    type: px4_msgs::msg::DistanceSensor
+  #- topic: /fmu/in/distance_sensor
+  #  type: px4_msgs::msg::DistanceSensor
 
   - topic: /fmu/in/manual_control_input
     type: px4_msgs::msg::ManualControlSetpoint
@@ -112,8 +126,8 @@ subscriptions:
   - topic: /fmu/in/onboard_computer_status
     type: px4_msgs::msg::OnboardComputerStatus
 
-  - topic: /fmu/in/obstacle_distance
-    type: px4_msgs::msg::ObstacleDistance
+  #- topic: /fmu/in/obstacle_distance
+  #  type: px4_msgs::msg::ObstacleDistance
 
   - topic: /fmu/in/sensor_optical_flow
     type: px4_msgs::msg::SensorOpticalFlow
@@ -145,11 +159,11 @@ subscriptions:
   - topic: /fmu/in/vehicle_command_mode_executor
     type: px4_msgs::msg::VehicleCommand
 
-  - topic: /fmu/in/vehicle_thrust_setpoint
-    type: px4_msgs::msg::VehicleThrustSetpoint
+  #- topic: /fmu/in/vehicle_thrust_setpoint
+  #  type: px4_msgs::msg::VehicleThrustSetpoint
 
-  - topic: /fmu/in/vehicle_torque_setpoint
-    type: px4_msgs::msg::VehicleTorqueSetpoint
+  #- topic: /fmu/in/vehicle_torque_setpoint
+  #  type: px4_msgs::msg::VehicleTorqueSetpoint
 
   - topic: /fmu/in/actuator_motors
     type: px4_msgs::msg::ActuatorMotors

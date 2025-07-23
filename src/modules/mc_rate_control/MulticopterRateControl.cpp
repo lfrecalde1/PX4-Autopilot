@@ -151,6 +151,19 @@ MulticopterRateControl::Run()
 		// use rates setpoint topic
 		vehicle_rates_setpoint_s vehicle_rates_setpoint{};
 
+		// updates anglar velocity and gyro data
+		_vehicle_acc_setpoint_sub.update(&_vehicle_angular_acceleration_setpoint);
+
+		_angular_acc_setpoint(0) = _vehicle_angular_acceleration_setpoint.xyz[0];
+		_angular_acc_setpoint(1) = _vehicle_angular_acceleration_setpoint.xyz[1];
+		_angular_acc_setpoint(2) = _vehicle_angular_acceleration_setpoint.xyz[2];
+
+		_vehicle_sensor_gyro_sub.update(&_sensor_gyro);
+		_gyro_angular_velocity(0) = _sensor_gyro.x;
+		_gyro_angular_velocity(1) = _sensor_gyro.y;
+		_gyro_angular_velocity(2) = _sensor_gyro.z;
+
+
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
 			// generate the rate setpoint from sticks
 			manual_control_setpoint_s manual_control_setpoint;
@@ -236,6 +249,12 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[0] = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
 			vehicle_torque_setpoint.xyz[1] = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
+
+			// Section to publish the control actions
+			control_debug.x = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
+			control_debug.z = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
+			_control_debug_pub.publish(control_debug);
 
 			// scale setpoints by battery status if enabled
 			if (_param_mc_bat_scale_en.get()) {
