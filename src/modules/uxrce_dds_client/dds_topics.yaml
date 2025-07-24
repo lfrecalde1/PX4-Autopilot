@@ -43,8 +43,8 @@ publications:
 
   # Angular Velocity and anglar acceleration
 
-  - topic: /fmu/out/vehicle_angular_velocity
-    type: px4_msgs::msg::VehicleAngularVelocity
+  #- topic: /fmu/out/vehicle_angular_velocity
+  #  type: px4_msgs::msg::VehicleAngularVelocity
 
   - topic: /fmu/out/vehicle_land_detected
     type: px4_msgs::msg::VehicleLandDetected
@@ -77,12 +77,12 @@ publications:
   #  type: px4_msgs::msg::AirspeedValidated
 
   # ESC RPM of the quadrotor
-  - topic: /fmu/out/esc_status
-    type: px4_msgs::msg::EscStatus
+  #- topic: /fmu/out/esc_status
+  #  type: px4_msgs::msg::EscStatus
   
   # Control Actions
-  - topic: /fmu/out/debug_vect
-    type: px4_msgs::msg::DebugVect
+  #- topic: /fmu/out/debug_vect
+  #  type: px4_msgs::msg::DebugVect
 
 
 # Create uORB::Publication

@@ -99,7 +99,7 @@ MulticopterRateControl::parameters_updated()
 
 	_output_lpf_yaw.setCutoffFreq(_param_mc_yaw_tq_cutoff.get());
 
-	strncpy(control_debug.name, "vel3D", 10);
+	strncpy(control_debug.name, "Control", 10);
 }
 
 void
