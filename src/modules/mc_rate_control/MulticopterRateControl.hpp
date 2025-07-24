@@ -60,6 +60,7 @@
 #include <uORB/topics/vehicle_status.h>
 #include <uORB/topics/vehicle_thrust_setpoint.h>
 #include <uORB/topics/vehicle_torque_setpoint.h>
+#include <string.h>
 
 // Library to publish the control actions
 #include <uORB/topics/debug_vect.h>
@@ -142,7 +143,7 @@ private:
 	vehicle_angular_acceleration_setpoint_s _vehicle_angular_acceleration_setpoint{};
 
 	// Publisher control actions
-	debug_vect_s control_debug{};
+	struct debug_vect_s control_debug;
 
 	// Parameters
 	bool _landed{true};

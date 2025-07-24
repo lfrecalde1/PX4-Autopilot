@@ -38,6 +38,7 @@
 #include <mathlib/math/Limits.hpp>
 #include <mathlib/math/Functions.hpp>
 #include <px4_platform_common/events.h>
+#include <string.h>
 
 using namespace matrix;
 using namespace time_literals;
@@ -97,6 +98,8 @@ MulticopterRateControl::parameters_updated()
 				  radians(_param_mc_acro_y_max.get()));
 
 	_output_lpf_yaw.setCutoffFreq(_param_mc_yaw_tq_cutoff.get());
+
+	strncpy(control_debug.name, "vel3D", 10);
 }
 
 void
@@ -254,6 +257,7 @@ MulticopterRateControl::Run()
 			control_debug.x = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
 			control_debug.y = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
 			control_debug.z = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
+			control_debug.timestamp = hrt_absolute_time();
 			_control_debug_pub.publish(control_debug);
 
 			// scale setpoints by battery status if enabled
