@@ -153,11 +153,8 @@ subscriptions:
   - topic: /fmu/in/vehicle_command_mode_executor
     type: px4_msgs::msg::VehicleCommand
 
-  #- topic: /fmu/in/vehicle_thrust_setpoint
-  #  type: px4_msgs::msg::VehicleThrustSetpoint
-
-  #- topic: /fmu/in/vehicle_torque_setpoint
-  #  type: px4_msgs::msg::VehicleTorqueSetpoint
+  - topic: /fmu/in/vehicle_angular_acceleration_setpoint
+    type: px4_msgs::msg::VehicleAngularAccelerationSetpoint
 
   - topic: /fmu/in/actuator_motors
     type: px4_msgs::msg::ActuatorMotors
