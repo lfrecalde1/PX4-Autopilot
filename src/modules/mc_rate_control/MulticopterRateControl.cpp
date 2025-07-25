@@ -99,7 +99,7 @@ MulticopterRateControl::parameters_updated()
 
 	_output_lpf_yaw.setCutoffFreq(_param_mc_yaw_tq_cutoff.get());
 
-	strncpy(control_debug.name, "Control", 10);
+	strncpy(control_debug.name, "AngAcc", 10);
 }
 
 void
@@ -254,9 +254,11 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
-			control_debug.z = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
+			control_debug.x = PX4_ISFINITE(_angular_acc_setpoint(0)) ? _angular_acc_setpoint(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(_angular_acc_setpoint(1)) ? _angular_acc_setpoint(1) : 0.f;
+			control_debug.z = PX4_ISFINITE(_angular_acc_setpoint(2)) ? _angular_acc_setpoint(2) : 0.f;
+			
+			// Publishing desired angular accelerations or torque
 			control_debug.timestamp = hrt_absolute_time();
 			_control_debug_pub.publish(control_debug);
 
