@@ -131,6 +131,7 @@ void LoggedTopics::add_default_topics()
 	add_topic("vehicle_air_data", 200);
 	add_topic("vehicle_angular_velocity", 20);
 	add_topic("vehicle_angular_acceleration_setpoint", 20);
+	add_topic("vehicle_rates_setpoint", 20);
 	add_topic("debug_vect", 20);
 	add_topic("vehicle_attitude", 50);
 	add_topic("vehicle_attitude_setpoint", 50);
@@ -268,6 +269,7 @@ void LoggedTopics::add_high_rate_topics()
 	add_topic("vehicle_angular_velocity");
 	add_topic("debug_vect");
 	add_topic("vehicle_angular_acceleration_setpoint");
+	add_topic("vehicle_rates_setpoint");
 	add_topic("vehicle_attitude");
 	add_topic("vehicle_attitude_setpoint");
 	add_topic("vehicle_rates_setpoint");
@@ -356,6 +358,7 @@ void LoggedTopics::add_system_identification_topics()
 	add_topic("vehicle_angular_velocity");
 	add_topic("debug_vect");
 	add_topic("vehicle_angular_acceleration_setpoint");
+	add_topic("vehicle_rates_setpoint");
 	add_topic("vehicle_torque_setpoint");
 	add_topic("vehicle_acceleration");
 	add_topic("actuator_motors");
