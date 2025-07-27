@@ -313,10 +313,10 @@ MulticopterRateControl::Run()
 			}
 
 			// run rate controller
-			//Vector3f torque_setpoint = _rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
+			Vector3f torque_setpoint = _rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
 			
 			// Section to include the Indi Controller
-			Vector3f torque_setpoint = _rate_control.update_indi(rates, _rates_setpoint, _angular_acc_setpoint, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
+			//Vector3f torque_setpoint = _rate_control.update_indi(rates, _rates_setpoint, _angular_acc_setpoint, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
 
 
 			// apply low-pass filtering on yaw axis to reduce high frequency torque caused by rotor acceleration
