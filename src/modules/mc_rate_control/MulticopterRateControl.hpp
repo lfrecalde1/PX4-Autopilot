@@ -204,17 +204,17 @@ private:
 	matrix::Matrix<float, 4, 4> _G;
 
 	// Inertia Matrix aprroximation
-	float j_xx{0.003302778315155f};
+	float j_xx{0.004005529157777f};
 	float j_xy{0.0f};
 	float j_xz{0.0f};
 
 	float j_yx{0.0f};
-	float j_yy{0.002992318481922f};
+	float j_yy{0.003944451307041f};
 	float j_yz{0.0f};
 
 	float j_zx{0.0f};
 	float j_zy{0.0f};
-	float j_zz{0.052456364359414f};
+	float j_zz{0.057116414405794f};
 	matrix::Matrix<float, 3, 3> _J;
 
 	// matrix to extract torques
