@@ -96,6 +96,8 @@ public:
 	matrix::Vector3f update(const matrix::Vector3f &rate, const matrix::Vector3f &rate_sp,
 				const matrix::Vector3f &angular_accel, const float dt, const bool landed);
 
+	matrix::Vector3f update_indi(const matrix::Vector3f &rate, const matrix::Vector3f &rate_sp, const matrix::Vector3f &desired_angular_accel, const matrix::Vector3f &torque_rpm, const matrix::Vector3f &torque_acc, const float dt, const bool landed);
+
 	/**
 	 * Set the integral term to 0 to prevent windup
 	 * @see _rate_int

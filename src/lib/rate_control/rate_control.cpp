@@ -93,6 +93,39 @@ Vector3f RateControl::update(const Vector3f &rate, const Vector3f &rate_sp, cons
 	return torque;
 }
 
+Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp, const Vector3f &desired_angular_accel, const Vector3f &torque_rpm, const Vector3f &torque_acc, const float dt, const bool landed)
+{
+	// angular rates error
+	Vector3f rate_error = rate_sp - rate;
+
+	// gains to only consider torque in x and y
+	Vector3f gain_rpm;
+	gain_rpm(0) = 0.5;
+	gain_rpm(1) = 0.5;
+	gain_rpm(2) = 0.0;
+
+	Vector3f gain_imu;
+	gain_imu(0) = 0.5;
+	gain_imu(1) = 0.5;
+	gain_imu(2) = 0.0;
+
+	// PID control with feed forward
+	//const Vector3f torque = _gain_p.emult(rate_error) + _rate_int - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
+	const Vector3f torque = (gain_rpm.emult(torque_rpm) - gain_imu.emult(torque_acc)) + _gain_p.emult(rate_error);
+
+	//PX4_INFO("Gains P: [%.3f, %.3f, %.3f] D: [%.3f, %.3f, %.3f] FF: [%.3f, %.3f, %.3f]",
+	//        (double)_gain_p(0), (double)_gain_p(1), (double)_gain_p(2),
+ 	//        (double)_gain_d(0), (double)_gain_d(1), (double)_gain_d(2),
+ 	//        (double)_gain_ff(0), (double)_gain_ff(1), (double)_gain_ff(2));
+
+	// update integral only if we are not landed
+	if (!landed) {
+		updateIntegral(rate_error, dt);
+	}
+
+	return torque;
+}
+
 void RateControl::updateIntegral(Vector3f &rate_error, const float dt)
 {
 	for (int i = 0; i < 3; i++) {

@@ -101,7 +101,7 @@ MulticopterRateControl::parameters_updated()
 	
 	// Init Flter for each motor
 	for (int i = 0; i < 4; ++i) {
-    _rpm_filter[i].set_cutoff_frequency(250.0f, 50.0f); // sample rate = 1000 Hz, cutoff = 30 Hz
+    _rpm_filter[i].set_cutoff_frequency(250.0f, 40.0f); // sample rate = 1000 Hz, cutoff = 30 Hz
     _rpm_filter[i].reset(0.0f);  // initialize with zero or initial RPM
 	}
 
@@ -245,7 +245,7 @@ MulticopterRateControl::Run()
 		matrix::Vector3f torque_from_rpm = _M * force_torque_rpm;
 
 		// Computing torque from angular velocity
-		Vector3f gyro_torque = _J*angular_accel+ rates % (_J * rates);
+		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates);
 
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
@@ -313,8 +313,11 @@ MulticopterRateControl::Run()
 			}
 
 			// run rate controller
-			Vector3f torque_setpoint =
-				_rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
+			//Vector3f torque_setpoint = _rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
+			
+			// Section to include the Indi Controller
+			Vector3f torque_setpoint = _rate_control.update_indi(rates, _rates_setpoint, _angular_acc_setpoint, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
+
 
 			// apply low-pass filtering on yaw axis to reduce high frequency torque caused by rotor acceleration
 			torque_setpoint(2) = _output_lpf_yaw.update(torque_setpoint(2), dt);

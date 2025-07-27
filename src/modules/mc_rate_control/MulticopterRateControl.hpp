@@ -181,25 +181,25 @@ private:
 	float dy{0.15f};
 	float dx{0.15f};
 	// Values of the identification
-	float ct1{-7.036883092087498e-06f};
-	float ct2{-4.945211226636825e-05f};
-	float ct3{-2.415001197485223e-05f};
-	float ct4{-2.712283666246595e-05f};
+	float ct1{-2.693796432776419e-05f};
+	float ct2{-2.693796432776419e-05f};
+	float ct3{-2.693796432776419e-05f};
+	float ct4{-2.693796432776419e-05f};
 
-	float ctx1{1.527273687905312e-04f};
-	float ctx2{1.531871247706235e-04f};
-	float ctx3{1.516972076323064e-04f};
-	float ctx4{1.521876745627232e-04f};
+	float ctx1{1.523272805306338e-04f};
+	float ctx2{1.523272805306338e-04f};
+	float ctx3{1.523272805306338e-04f};
+	float ctx4{1.523272805306338e-04f};
 
-	float cty1{-1.528874421873605e-04f};
-	float cty2{-1.530375745722873e-04f};
-	float cty3{-1.543380913326536e-04f};
-	float cty4{-1.543183246660584e-04f};
+	float cty1{-1.536580300813074e-04f};
+	float cty2{-1.536580300813074e-04f};
+	float cty3{-1.536580300813074e-04f};
+	float cty4{-1.536580300813074e-04f};
 
-	float cq1{-1.523106157956533e-05f};
-	float cq2{-1.729292057858767e-05f};
-	float cq3{-1.530448598864587e-05f};
-	float cq4{-1.718317526437641e-05f};
+	float cq1{-1.624086928079939e-05f};
+	float cq2{-1.624086928079939e-05f};
+	float cq3{-1.624086928079939e-05f};
+	float cq4{-1.624086928079939e-05f};
 
 	matrix::Matrix<float, 4, 4> _G;
 
@@ -219,7 +219,6 @@ private:
 
 	// matrix to extract torques
 	matrix::Matrix<float, 3, 4> _M;
-
 
 
 	DEFINE_PARAMETERS(
