@@ -98,6 +98,62 @@ MulticopterRateControl::parameters_updated()
 				  radians(_param_mc_acro_y_max.get()));
 
 	_output_lpf_yaw.setCutoffFreq(_param_mc_yaw_tq_cutoff.get());
+	
+	// Init Flter for each motor
+	for (int i = 0; i < 4; ++i) {
+    _rpm_filter[i].set_cutoff_frequency(250.0f, 50.0f); // sample rate = 1000 Hz, cutoff = 30 Hz
+    _rpm_filter[i].reset(0.0f);  // initialize with zero or initial RPM
+	}
+
+	// Init allocation matrix
+	_G(0, 0) = ct1;
+	_G(0, 1) = ct2;
+	_G(0, 2) = ct3;
+	_G(0, 3) = ct4;
+
+	_G(1, 0) = -ctx1*dy;
+	_G(1, 1) =  ctx2*dy;
+	_G(1, 2) =  ctx3*dy;
+	_G(1, 3) = -ctx4*dy;
+
+	_G(2, 0) = -cty1*dx;
+	_G(2, 1) = cty2*dx;
+	_G(2, 2) = -cty3*dx;
+	_G(2, 3) = cty4*dx;
+
+	_G(3, 0) =  -(cq1);
+	_G(3, 1) = -(cq2);
+	_G(3, 2) = (cq3);
+	_G(3, 3) =  (cq4);
+
+	// Init Inertia matrix
+	_J(0, 0) = j_xx;
+	_J(0, 1) = j_xy;
+	_J(0, 2) = j_xz;
+
+	_J(1, 0) = j_yx;
+	_J(1, 1) = j_yy;
+	_J(1, 2) = j_yz;
+
+	_J(2, 0) = j_zx;
+	_J(2, 1) = j_zy;
+	_J(2, 2) = j_zz;
+
+	// Matrix to extracts torques
+	_M(0, 0) = 0.0f;
+	_M(0, 1) = 1.0f;
+	_M(0, 2) = 0.0f;
+	_M(0, 3) = 0.0f;
+
+	_M(1, 0) = 0.0f;
+	_M(1, 1) = 0.0f;
+	_M(1, 2) = 1.0f;
+	_M(1, 3) = 0.0f;
+
+	_M(2, 0) = 0.0f;
+	_M(2, 1) = 0.0f;
+	_M(2, 2) = 0.0f;
+	_M(2, 3) = 1.0f;
 
 	strncpy(control_debug.name, "AngAcc", 10);
 }
@@ -154,6 +210,9 @@ MulticopterRateControl::Run()
 		// use rates setpoint topic
 		vehicle_rates_setpoint_s vehicle_rates_setpoint{};
 
+		// update esc
+		_vehicle_esc_sub.update(&_esc_status);
+
 		// updates anglar velocity and gyro data
 		_vehicle_acc_setpoint_sub.update(&_vehicle_angular_acceleration_setpoint);
 
@@ -165,6 +224,28 @@ MulticopterRateControl::Run()
 		_gyro_angular_velocity(0) = _sensor_gyro.x;
 		_gyro_angular_velocity(1) = _sensor_gyro.y;
 		_gyro_angular_velocity(2) = _sensor_gyro.z;
+
+		// updates Estimation of force and torques
+		constexpr float RPM_TO_RAD_S = M_PI_F / 30.f;		
+
+		matrix::Vector4f motors_filt;
+		motors_filt(0) = _rpm_filter[0].apply(_esc_status.esc[0].esc_rpm) * RPM_TO_RAD_S;
+		motors_filt(1) = _rpm_filter[1].apply(_esc_status.esc[1].esc_rpm) * RPM_TO_RAD_S;
+		motors_filt(2) = _rpm_filter[2].apply(_esc_status.esc[2].esc_rpm) * RPM_TO_RAD_S;
+		motors_filt(3) = _rpm_filter[3].apply(_esc_status.esc[3].esc_rpm) * RPM_TO_RAD_S;
+
+		matrix::Vector4f motor_filt_square;
+		for (int i = 0; i < 4; ++i) {
+			motor_filt_square(i) = (motors_filt(i) * motors_filt(i));
+		}
+
+		// Computing the force and torque based on  Optimization
+		matrix::Vector4f force_torque_rpm = _G * motor_filt_square;
+
+		matrix::Vector3f torque_from_rpm = _M * force_torque_rpm;
+
+		// Computing torque from angular velocity
+		Vector3f gyro_torque = _J*angular_accel+ rates % (_J * rates);
 
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
@@ -254,9 +335,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(_angular_acc_setpoint(0)) ? _angular_acc_setpoint(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(_angular_acc_setpoint(1)) ? _angular_acc_setpoint(1) : 0.f;
-			control_debug.z = PX4_ISFINITE(_angular_acc_setpoint(2)) ? _angular_acc_setpoint(2) : 0.f;
+			control_debug.x = PX4_ISFINITE(torque_from_rpm(0)) ? torque_from_rpm(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(gyro_torque(0)) ? gyro_torque(0) : 0.f;
+			control_debug.z = PX4_ISFINITE(torque_from_rpm(1)) ? torque_from_rpm(1) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
 			control_debug.timestamp = hrt_absolute_time();
