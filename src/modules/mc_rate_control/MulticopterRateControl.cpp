@@ -338,9 +338,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(torque_from_rpm(0)) ? torque_from_rpm(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(gyro_torque(0)) ? gyro_torque(0) : 0.f;
-			control_debug.z = PX4_ISFINITE(torque_from_rpm(1)) ? torque_from_rpm(1) : 0.f;
+			control_debug.x = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(torque_from_rpm(0)) ? torque_from_rpm(0) : 0.f;
+			control_debug.z = PX4_ISFINITE(gyro_torque(0)) ? gyro_torque(0) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
 			control_debug.timestamp = hrt_absolute_time();
