@@ -5,57 +5,57 @@
 #####
 publications:
 
-  - topic: /eagle4/fmu/out/register_ext_component_reply
+  - topic: /fmu/out/register_ext_component_reply
     type: px4_msgs::msg::RegisterExtComponentReply
 
-  - topic: /eagle4/fmu/out/arming_check_request
+  - topic: /fmu/out/arming_check_request
     type: px4_msgs::msg::ArmingCheckRequest
 
-  - topic: /eagle4/fmu/out/mode_completed
+  - topic: /fmu/out/mode_completed
     type: px4_msgs::msg::ModeCompleted
 
-  - topic: /eagle4/fmu/out/battery_status
+  - topic: /fmu/out/battery_status
     type: px4_msgs::msg::BatteryStatus
 
   #- topic: /fmu/out/collision_constraints
   #  type: px4_msgs::msg::CollisionConstraints
 
-  - topic: /eagle4/fmu/out/estimator_status_flags
+  - topic: /fmu/out/estimator_status_flags
     type: px4_msgs::msg::EstimatorStatusFlags
 
-  - topic: /eagle4/fmu/out/failsafe_flags
+  - topic: /fmu/out/failsafe_flags
     type: px4_msgs::msg::FailsafeFlags
 
-  - topic: /eagle4/fmu/out/manual_control_setpoint
+  - topic: /fmu/out/manual_control_setpoint
     type: px4_msgs::msg::ManualControlSetpoint
 
-  - topic: /eagle4/fmu/out/message_format_response
+  - topic: /fmu/out/message_format_response
     type: px4_msgs::msg::MessageFormatResponse
 
-  - topic: /eagle4/fmu/out/position_setpoint_triplet
+  - topic: /fmu/out/position_setpoint_triplet
     type: px4_msgs::msg::PositionSetpointTriplet
 
-  - topic: /eagle4/fmu/out/sensor_combined
+  - topic: /fmu/out/sensor_combined
     type: px4_msgs::msg::SensorCombined
 
-  - topic: /eagle4/fmu/out/timesync_status
+  - topic: /fmu/out/timesync_status
     type: px4_msgs::msg::TimesyncStatus
 
   # Angular Velocity and anglar acceleration
 
-  - topic: /eagle4/fmu/out/vehicle_angular_velocity
+  - topic: /fmu/out/vehicle_angular_velocity
     type: px4_msgs::msg::VehicleAngularVelocity
 
-  - topic: /eagle4/fmu/out/vehicle_land_detected
+  - topic: /fmu/out/vehicle_land_detected
     type: px4_msgs::msg::VehicleLandDetected
 
-  - topic: /eagle4/fmu/out/vehicle_attitude
+  - topic: /fmu/out/vehicle_attitude
     type: px4_msgs::msg::VehicleAttitude
 
-  - topic: /eagle4/fmu/out/vehicle_control_mode
+  - topic: /fmu/out/vehicle_control_mode
     type: px4_msgs::msg::VehicleControlMode
 
-  - topic: /eagle4/fmu/out/vehicle_command_ack
+  - topic: /fmu/out/vehicle_command_ack
     type: px4_msgs::msg::VehicleCommandAck
 
   #- topic: /fmu/out/vehicle_global_position
@@ -64,13 +64,13 @@ publications:
   #- topic: /fmu/out/vehicle_gps_position
   #  type: px4_msgs::msg::SensorGps
 
-  - topic: /eagle4/fmu/out/vehicle_local_position
+  - topic: /fmu/out/vehicle_local_position
     type: px4_msgs::msg::VehicleLocalPosition
 
-  - topic: /eagle4/fmu/out/vehicle_odometry
+  - topic: /fmu/out/vehicle_odometry
     type: px4_msgs::msg::VehicleOdometry
 
-  - topic: /eagle4/fmu/out/vehicle_status
+  - topic: /fmu/out/vehicle_status
     type: px4_msgs::msg::VehicleStatus
 
   #- topic: /fmu/out/airspeed_validated
@@ -81,95 +81,95 @@ publications:
   #  type: px4_msgs::msg::EscStatus
   
   # Control Actions
-  - topic: /eagle4/fmu/out/debug_vect
+  - topic: /fmu/out/debug_vect
     type: px4_msgs::msg::DebugVect
 
 
 # Create uORB::Publication
 subscriptions:
-  - topic: /eagle4/fmu/in/register_ext_component_request
+  - topic: /fmu/in/register_ext_component_request
     type: px4_msgs::msg::RegisterExtComponentRequest
 
-  - topic: /eagle4/fmu/in/unregister_ext_component
+  - topic: /fmu/in/unregister_ext_component
     type: px4_msgs::msg::UnregisterExtComponent
 
-  - topic: /eagle4/fmu/in/config_overrides_request
+  - topic: /fmu/in/config_overrides_request
     type: px4_msgs::msg::ConfigOverrides
 
-  - topic: /eagle4/fmu/in/arming_check_reply
+  - topic: /fmu/in/arming_check_reply
     type: px4_msgs::msg::ArmingCheckReply
 
-  - topic: /eagle4/fmu/in/message_format_request
+  - topic: /fmu/in/message_format_request
     type: px4_msgs::msg::MessageFormatRequest
 
-  - topic: /eagle4/fmu/in/mode_completed
+  - topic: /fmu/in/mode_completed
     type: px4_msgs::msg::ModeCompleted
 
-  - topic: /eagle4/fmu/in/config_control_setpoints
+  - topic: /fmu/in/config_control_setpoints
     type: px4_msgs::msg::VehicleControlMode
 
   #- topic: /fmu/in/distance_sensor
   #  type: px4_msgs::msg::DistanceSensor
 
-  - topic: /eagle4/fmu/in/manual_control_input
+  - topic: /fmu/in/manual_control_input
     type: px4_msgs::msg::ManualControlSetpoint
 
-  - topic: /eagle4/fmu/in/offboard_control_mode
+  - topic: /fmu/in/offboard_control_mode
     type: px4_msgs::msg::OffboardControlMode
 
-  - topic: /eagle4/fmu/in/onboard_computer_status
+  - topic: /fmu/in/onboard_computer_status
     type: px4_msgs::msg::OnboardComputerStatus
 
   #- topic: /fmu/in/obstacle_distance
   #  type: px4_msgs::msg::ObstacleDistance
 
-  - topic: /eagle4/fmu/in/sensor_optical_flow
+  - topic: /fmu/in/sensor_optical_flow
     type: px4_msgs::msg::SensorOpticalFlow
 
-  - topic: /eagle4/fmu/in/goto_setpoint
+  - topic: /fmu/in/goto_setpoint
     type: px4_msgs::msg::GotoSetpoint
 
-  - topic: /eagle4/fmu/in/telemetry_status
+  - topic: /fmu/in/telemetry_status
     type: px4_msgs::msg::TelemetryStatus
 
-  - topic: /eagle4/fmu/in/trajectory_setpoint
+  - topic: /fmu/in/trajectory_setpoint
     type: px4_msgs::msg::TrajectorySetpoint
 
-  - topic: /eagle4/fmu/in/vehicle_attitude_setpoint
+  - topic: /fmu/in/vehicle_attitude_setpoint
     type: px4_msgs::msg::VehicleAttitudeSetpoint
 
-  - topic: /eagle4/fmu/in/vehicle_mocap_odometry
+  - topic: /fmu/in/vehicle_mocap_odometry
     type: px4_msgs::msg::VehicleOdometry
 
-  - topic: /eagle4/fmu/in/vehicle_rates_setpoint
+  - topic: /fmu/in/vehicle_rates_setpoint
     type: px4_msgs::msg::VehicleRatesSetpoint
 
-  - topic: /eagle4/fmu/in/vehicle_visual_odometry
+  - topic: /fmu/in/vehicle_visual_odometry
     type: px4_msgs::msg::VehicleOdometry
 
-  - topic: /eagle4/fmu/in/vehicle_command
+  - topic: /fmu/in/vehicle_command
     type: px4_msgs::msg::VehicleCommand
 
-  - topic: /eagle4/fmu/in/vehicle_command_mode_executor
+  - topic: /fmu/in/vehicle_command_mode_executor
     type: px4_msgs::msg::VehicleCommand
 
-  - topic: /eagle4/fmu/in/vehicle_angular_acceleration_setpoint
+  - topic: /fmu/in/vehicle_angular_acceleration_setpoint
     type: px4_msgs::msg::VehicleAngularAccelerationSetpoint
 
-  - topic: /eagle4/fmu/in/actuator_motors
+  - topic: /fmu/in/actuator_motors
     type: px4_msgs::msg::ActuatorMotors
 
-  - topic: /eagle4/fmu/in/actuator_servos
+  - topic: /fmu/in/actuator_servos
     type: px4_msgs::msg::ActuatorServos
 
-  - topic: /eagle4/fmu/in/aux_global_position
+  - topic: /fmu/in/aux_global_position
     type: px4_msgs::msg::VehicleGlobalPosition
 
   # Thrust and torque setpoint from the rate controller
-  - topic: /eagle4/fmu/in/vehicle_thrust_setpoint
+  - topic: /fmu/in/vehicle_thrust_setpoint
     type: px4_msgs::msg::VehicleThrustSetpoint
 
-  - topic: /eagle4/fmu/in/vehicle_torque_setpoint
+  - topic: /fmu/in/vehicle_torque_setpoint
     type: px4_msgs::msg::VehicleTorqueSetpoint
 
 # Create uORB::PublicationMulti
