@@ -74,6 +74,9 @@
 // Lirary for the Gyro
 #include <uORB/topics/sensor_gyro.h>
 
+// Esc Library
+#include <uORB/topics/esc_status.h>
+
 using namespace time_literals;
 
 class MulticopterRateControl : public ModuleBase<MulticopterRateControl>, public ModuleParams, public px4::WorkItem
@@ -116,6 +119,7 @@ private:
 	// New subscriptions
 	uORB::Subscription _vehicle_acc_setpoint_sub{ORB_ID(vehicle_angular_acceleration_setpoint)};
 	uORB::Subscription _vehicle_sensor_gyro_sub{ORB_ID(sensor_gyro)};
+	uORB::Subscription _vehicle_esc_sub{ORB_ID(esc_status)};
 
 
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
@@ -139,6 +143,7 @@ private:
 	vehicle_status_s	_vehicle_status{};
 
 	// ESC, Gyr, angular velocity subscriptions
+	esc_status_s _esc_status{};
 	sensor_gyro_s _sensor_gyro{};
 	vehicle_angular_acceleration_setpoint_s _vehicle_angular_acceleration_setpoint{};
 
@@ -166,6 +171,52 @@ private:
 	float _control_energy[4] {};
 
 	AlphaFilter<float> _output_lpf_yaw;
+
+	// rpm filter
+	LowPassFilter2p<float> _rpm_filter[4];
+
+	// Allocation matrix
+	float dy{0.15f};
+	float dx{0.15f};
+	// Values of the identification
+	float ct1{-4.296257892694789e-12f};
+	float ct2{-6.795696330905810e-12f};
+	float ct3{-3.031343198074452e-13f};
+	float ct4{-5.833136215020158e-12f};
+
+	float ctx1{-1.320086903218649e-11f};
+	float ctx2{9.939236807027385e-12f};
+	float ctx3{-1.424948921080442e-11f};
+	float ctx4{1.055934222946467e-11f};
+
+	float cty1{-2.275261639907291e-11f};
+	float cty2{-2.187069309476584e-11f};
+	float cty3{-2.181199938624341e-11f};
+	float cty4{-2.229104638037277e-11f};
+
+	float cq1{2.804617538448999e-12f};
+	float cq2{-3.247328148949031e-12f};
+	float cq3{2.621520543521445e-12f};
+	float cq4{-3.155788656018333e-12f};
+
+	matrix::Matrix<float, 4, 4> _G;
+
+	// Inertia Matrix aprroximation
+	float j_xx{4.037097259060167e-04f};
+	float j_xy{0.0f};
+	float j_xz{0.0f};
+
+	float j_yx{0.0f};
+	float j_yy{4.037097259060167e-04f};
+	float j_yz{0.0f};
+
+	float j_zx{0.0f};
+	float j_zy{0.0f};
+	float j_zz{0.003945545271575f};
+	matrix::Matrix<float, 3, 3> _J;
+
+	// matrix to extract torques
+	matrix::Matrix<float, 3, 4> _M;
 
 	DEFINE_PARAMETERS(
 		(ParamFloat<px4::params::MC_ROLLRATE_P>) _param_mc_rollrate_p,
