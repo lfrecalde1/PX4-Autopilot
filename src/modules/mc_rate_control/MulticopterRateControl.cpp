@@ -245,7 +245,7 @@ MulticopterRateControl::Run()
 		matrix::Vector3f torque_from_rpm = _M * force_torque_rpm;
 
 		// Computing torque from angular velocity
-		Vector3f gyro_torque = _J*angular_accel;
+		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates);
 
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
