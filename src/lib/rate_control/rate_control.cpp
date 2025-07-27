@@ -100,13 +100,13 @@ Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp,
 
 	// gains to only consider torque in x and y
 	Vector3f gain_rpm;
-	gain_rpm(0) = 0.5;
-	gain_rpm(1) = 0.5;
+	gain_rpm(0) = 0.3;
+	gain_rpm(1) = 0.3;
 	gain_rpm(2) = 0.0;
 
 	Vector3f gain_imu;
-	gain_imu(0) = 0.5;
-	gain_imu(1) = 0.5;
+	gain_imu(0) = 0.3;
+	gain_imu(1) = 0.3;
 	gain_imu(2) = 0.0;
 
 	// PID control with feed forward
