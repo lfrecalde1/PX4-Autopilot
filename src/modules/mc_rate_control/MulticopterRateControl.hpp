@@ -176,6 +176,7 @@ private:
 
 	// Yaw filter
 	AlphaFilter<float> _output_lpf_yaw;
+	AlphaFilter<float> _output_lpf_yaw_indi;
 
 	// Allocation matrix
 	float dy{0.15f};
