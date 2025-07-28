@@ -155,6 +155,25 @@ MulticopterRateControl::parameters_updated()
 	_M(2, 2) = 0.0f;
 	_M(2, 3) = 1.0f;
 
+	// biaas vector
+	_b(0, 0) = b_xx;
+	_b(1, 0) = b_yx;
+	_b(1, 0) = b_zx;
+
+	// Damping Matrix
+	_B(0, 0) = B_xx;
+	_B(0, 1) = B_xy;
+	_B(0, 2) = B_xz;
+
+	_B(1, 0) = B_yx;
+	_B(1, 1) = B_yy;
+	_B(1, 2) = B_yz;
+
+	_B(2, 0) = B_zx;
+	_B(2, 1) = B_zy;
+	_B(2, 2) = B_zz;
+
+
 	strncpy(control_debug.name, "AngAcc", 10);
 }
 
@@ -245,7 +264,7 @@ MulticopterRateControl::Run()
 		matrix::Vector3f torque_from_rpm = _M * force_torque_rpm;
 
 		// Computing torque from angular velocity
-		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates);
+		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates) + _b + _B*rates;
 
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {

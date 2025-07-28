@@ -204,18 +204,40 @@ private:
 	matrix::Matrix<float, 4, 4> _G;
 
 	// Inertia Matrix aprroximation
-	float j_xx{4.037097259060167e-04f};
+	float j_xx{-2.064123242563426e-04f};
 	float j_xy{0.0f};
 	float j_xz{0.0f};
 
 	float j_yx{0.0f};
-	float j_yy{4.037097259060167e-04f};
+	float j_yy{4.065150430355211e-04f};
 	float j_yz{0.0f};
 
 	float j_zx{0.0f};
 	float j_zy{0.0f};
-	float j_zz{0.003945545271575f};
+	float j_zz{0.003816794566689f};
 	matrix::Matrix<float, 3, 3> _J;
+
+	// bias
+	float b_xx{-0.003250378052492f};
+	float b_yx{0.001078637752653f};
+	float b_zx{-0.001762905987361f};
+	matrix::Matrix<float, 3, 1> _b;
+
+
+	// Damping matrix
+	float B_xx{-0.005051559442810f};
+	float B_xy{0.0f};
+	float B_xz{0.0f};
+
+	float B_yx{0.0f};
+	float B_yy{-0.006646042429515f};
+	float B_yz{0.0f};
+
+	float B_zx{0.0f};
+	float B_zy{0.0f};
+	float B_zz{0.013314690051747f};
+	matrix::Matrix<float, 3, 3> _B;
+
 
 	// matrix to extract torques
 	matrix::Matrix<float, 3, 4> _M;
