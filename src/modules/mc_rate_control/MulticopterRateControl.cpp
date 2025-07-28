@@ -158,7 +158,7 @@ MulticopterRateControl::parameters_updated()
 	// biaas vector
 	_b(0, 0) = b_xx;
 	_b(1, 0) = b_yx;
-	_b(1, 0) = b_zx;
+	_b(2, 0) = b_zx;
 
 	// Damping Matrix
 	_B(0, 0) = B_xx;
