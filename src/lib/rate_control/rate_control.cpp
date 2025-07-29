@@ -111,7 +111,7 @@ Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp,
 
 	Vector3f gain_rate;
 	gain_rate(0) = 0.053;
-	gain_rate(1) = 0.060;
+	gain_rate(1) = 0.053;
 	gain_rate(2) = 0.2;
 
 
