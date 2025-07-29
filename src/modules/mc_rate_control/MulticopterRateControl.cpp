@@ -266,6 +266,7 @@ MulticopterRateControl::Run()
 
 		// Computing torque from angular velocity
 		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates) + _b + _B*rates;
+		//Vector3f gyro_torque = _J*angular_accel;
 
 		matrix::Vector3f torque_disturbance = torque_from_rpm - gyro_torque;
 

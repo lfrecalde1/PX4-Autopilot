@@ -224,7 +224,6 @@ private:
 	float b_zx{4.813576318689553e-04f};
 	matrix::Matrix<float, 3, 1> _b;
 
-
 	// Damping matrix
 	float B_xx{-0.011379455584759f};
 	float B_xy{0.0f};
