@@ -77,8 +77,8 @@ Vector3f RateControl::update(const Vector3f &rate, const Vector3f &rate_sp, cons
 	Vector3f rate_error = rate_sp - rate;
 
 	// PID control with feed forward
-	//const Vector3f torque = _gain_p.emult(rate_error) + _rate_int - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
-	const Vector3f torque = _gain_p.emult(rate_error) - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
+	const Vector3f torque = _gain_p.emult(rate_error) + _rate_int - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
+	//const Vector3f torque = _gain_p.emult(rate_error) - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
 
 	//PX4_INFO("Gains P: [%.3f, %.3f, %.3f] D: [%.3f, %.3f, %.3f] FF: [%.3f, %.3f, %.3f]",
 	        //(double)_gain_p(0), (double)_gain_p(1), (double)_gain_p(2),
@@ -93,7 +93,7 @@ Vector3f RateControl::update(const Vector3f &rate, const Vector3f &rate_sp, cons
 	return torque;
 }
 
-Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp, const Vector3f &desired_angular_accel, const Vector3f &torque_rpm, const Vector3f &torque_acc, const float dt, const bool landed)
+Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp, const Vector3f &angular_acc, const Vector3f &desired_angular_accel, const Vector3f &desired_gyro, const Vector3f &torque_rpm, const Vector3f &torque_acc, const float dt, const bool landed)
 {
 	// angular rates error
 	Vector3f rate_error = rate_sp - rate;
@@ -114,10 +114,15 @@ Vector3f RateControl::update_indi(const Vector3f &rate, const Vector3f &rate_sp,
 	gain_rate(1) = 0.15;
 	gain_rate(2) = 0.2;
 
+	Vector3f gain_acc;
+	gain_acc(0) = 0.05;
+	gain_acc(1) = 0.05;
+	gain_acc(0) = 0.05;
+
 
 	// PID control with feed forward
 	//const Vector3f torque = _gain_p.emult(rate_error) + _rate_int - _gain_d.emult(angular_accel) + _gain_ff.emult(rate_sp);
-	const Vector3f torque = (gain_rpm.emult(torque_rpm) - gain_imu.emult(torque_acc)) + gain_rate.emult(rate_error);
+	const Vector3f torque = (gain_rpm.emult(torque_rpm) - gain_imu.emult(torque_acc)) + gain_rate.emult(rate_error) + gain_acc.emult(desired_angular_accel);
 
 	//PX4_INFO("Gains P: [%.3f, %.3f, %.3f]",
 	        //(double)gain_rate(0), (double)gain_rate(1), (double)gain_rate(2));

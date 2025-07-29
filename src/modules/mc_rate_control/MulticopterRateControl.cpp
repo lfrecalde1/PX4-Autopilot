@@ -269,6 +269,7 @@ MulticopterRateControl::Run()
 		//Vector3f gyro_torque = _J*angular_accel;
 
 		matrix::Vector3f torque_disturbance = torque_from_rpm - gyro_torque;
+		
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
 			// generate the rate setpoint from sticks
@@ -333,12 +334,13 @@ MulticopterRateControl::Run()
 				// TODO: send the unallocated value directly for better anti-windup
 				_rate_control.setSaturationStatus(saturation_positive, saturation_negative);
 			}
-
+			// Desired Gyro
+			matrix::Vector3f desired_gyro = _rates_setpoint % (_J * _rates_setpoint);
 			// run rate controller
 			Vector3f torque_setpoint = _rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
 			
 			// Section to include the Indi Controller
-			Vector3f torque_setpoint_indi = _rate_control.update_indi(rates, _rates_setpoint, _angular_acc_setpoint, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
+			Vector3f torque_setpoint_indi = _rate_control.update_indi(rates, _rates_setpoint, angular_accel,  _angular_acc_setpoint, desired_gyro, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
 
 
 			// apply low-pass filtering on yaw axis to reduce high frequency torque caused by rotor acceleration
