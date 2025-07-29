@@ -267,6 +267,7 @@ MulticopterRateControl::Run()
 		// Computing torque from angular velocity
 		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates) + _b + _B*rates;
 
+		Vector3f torque_disturbance = torque_from_rpm - gyro_torque;
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
 			// generate the rate setpoint from sticks
@@ -359,9 +360,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint_indi(2)) ? torque_setpoint_indi(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(torque_setpoint_indi(0)) ? torque_setpoint_indi(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(torque_setpoint_indi(1)) ? torque_setpoint_indi(1) : 0.f;
-			control_debug.z = PX4_ISFINITE(torque_setpoint_indi(2)) ? torque_setpoint_indi(2) : 0.f;
+			control_debug.x = PX4_ISFINITE(torque_disturbance(0)) ? torque_disturbance(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(torque_disturbance(1)) ? torque_disturbance(1) : 0.f;
+			control_debug.z = PX4_ISFINITE(torque_disturbance(2)) ? torque_disturbance(2) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
 			control_debug.timestamp = hrt_absolute_time();
