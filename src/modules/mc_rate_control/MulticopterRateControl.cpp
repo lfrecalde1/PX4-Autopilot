@@ -102,7 +102,7 @@ MulticopterRateControl::parameters_updated()
 	
 	// Init Flter for each motor
 	for (int i = 0; i < 4; ++i) {
-    _rpm_filter[i].set_cutoff_frequency(250.0f, 40.0f); // sample rate = 1000 Hz, cutoff = 30 Hz
+    _rpm_filter[i].set_cutoff_frequency(400.0f, 40.0f); // sample rate = 1000 Hz, cutoff = 30 Hz
     _rpm_filter[i].reset(0.0f);  // initialize with zero or initial RPM
 	}
 
@@ -355,9 +355,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint_s vehicle_torque_setpoint{};
 
 			_thrust_setpoint.copyTo(vehicle_thrust_setpoint.xyz);
-			vehicle_torque_setpoint.xyz[0] = PX4_ISFINITE(torque_setpoint_indi(0)) ? torque_setpoint_indi(0) : 0.f;
-			vehicle_torque_setpoint.xyz[1] = PX4_ISFINITE(torque_setpoint_indi(1)) ? torque_setpoint_indi(1) : 0.f;
-			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint_indi(2)) ? torque_setpoint_indi(2) : 0.f;
+			vehicle_torque_setpoint.xyz[0] = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
+			vehicle_torque_setpoint.xyz[1] = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
+			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
 			control_debug.x = PX4_ISFINITE(torque_disturbance(0)) ? torque_disturbance(0) : 0.f;
