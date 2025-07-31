@@ -335,13 +335,26 @@ MulticopterRateControl::Run()
 				_rate_control.setSaturationStatus(saturation_positive, saturation_negative);
 			}
 			// Desired Gyro
-			matrix::Vector3f desired_gyro = _rates_setpoint % (_J * _rates_setpoint);
+			//matrix::Vector3f desired_gyro = _rates_setpoint % (_J * _rates_setpoint);
 			// run rate controller
 			Vector3f torque_setpoint = _rate_control.update(rates, _rates_setpoint, angular_accel, dt, _maybe_landed || _landed);
 			
 			// Section to include the Indi Controller
-			Vector3f torque_setpoint_indi = _rate_control.update_indi(rates, _rates_setpoint, angular_accel,  _angular_acc_setpoint, desired_gyro, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
+			//Vector3f torque_setpoint_indi = _rate_control.update_indi(rates, _rates_setpoint, angular_accel,  _angular_acc_setpoint, desired_gyro, torque_from_rpm, gyro_torque, dt, _maybe_landed || _landed);
+			Vector3f gain_rate;
+			gain_rate(0) = 50;
+			gain_rate(1) = 50;
+			gain_rate(2) = 50;
 
+			Vector3f gain_indi;
+			gain_indi(0) = 0.4;
+			gain_indi(1) = 0.4;
+			gain_indi(2) = 0.4;
+
+			Vector3f rate_error = _rates_setpoint - rates;
+			//Vector3f torque_setpoint_indi = _J*(gain_rate.emult(rate_error)) + rates % (_J * rates) + _b + _B*rates;
+			Vector3f torque_setpoint_indi = _J*(gain_rate.emult(rate_error)) + gain_indi.emult(torque_from_rpm - _J*angular_accel);
+			//Vector3f torque_setpoint_indi = _J*(gain_rate.emult(rate_error));
 
 			// apply low-pass filtering on yaw axis to reduce high frequency torque caused by rotor acceleration
 			torque_setpoint(2) = _output_lpf_yaw.update(torque_setpoint(2), dt);
@@ -358,9 +371,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint_s vehicle_torque_setpoint{};
 
 			_thrust_setpoint.copyTo(vehicle_thrust_setpoint.xyz);
-			vehicle_torque_setpoint.xyz[0] = PX4_ISFINITE(torque_setpoint_indi(0)) ? torque_setpoint_indi(0) : 0.f;
-			vehicle_torque_setpoint.xyz[1] = PX4_ISFINITE(torque_setpoint_indi(1)) ? torque_setpoint_indi(1) : 0.f;
-			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint_indi(2)) ? torque_setpoint_indi(2) : 0.f;
+			vehicle_torque_setpoint.xyz[0] = PX4_ISFINITE(torque_setpoint(0)) ? torque_setpoint(0) : 0.f;
+			vehicle_torque_setpoint.xyz[1] = PX4_ISFINITE(torque_setpoint(1)) ? torque_setpoint(1) : 0.f;
+			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
 			control_debug.x = PX4_ISFINITE(torque_disturbance(0)) ? torque_disturbance(0) : 0.f;

@@ -182,60 +182,60 @@ private:
 	float dy{0.15f};
 	float dx{0.15f};
 	// Values of the identification
-	float ct1{-7.055858615490074e-06f};
-	float ct2{-4.936035327336719e-05f};
-	float ct3{-2.413226952165115e-05f};
-	float ct4{-2.700851857363740e-05f};
+	float ct1{-2.425854517604242e-05f};
+	float ct2{-2.545051478262950e-05f};
+	float ct3{-6.058874478785670e-05f};
+	float ct4{-1.613049733298344e-06f};
 
-	float ctx1{1.527315792177603e-04f};
-	float ctx2{1.531903011666724e-04f};
-	float ctx3{1.516910776096225e-04f};
-	float ctx4{1.521820077975827e-04f};
+	float ctx1{1.486815786003598e-04f};
+	float ctx2{1.493058699728461e-04f};
+	float ctx3{1.471056734282938e-04f};
+	float ctx4{1.478270926965480e-04f};
 
-	float cty1{-1.528904123139913e-04f};
-	float cty2{-1.530431210754746e-04f};
-	float cty3{-1.543297960096418e-04f};
-	float cty4{-1.543139314820335e-04f};
+	float cty1{-1.487623742402050e-04f};
+	float cty2{-1.492150037836482e-04f};
+	float cty3{-1.457232824233073e-04f};
+	float cty4{-1.454575089870208e-04f};
 
-	float cq1{-1.523083485631405e-05f};
-	float cq2{-1.729388574260582e-05f};
-	float cq3{-1.530385055793782e-05f};
-	float cq4{-1.718245453381784e-05f};
+	float cq1{-1.506748419767556e-05f};
+	float cq2{-1.596067974111992e-05f};
+	float cq3{-1.526171944170318e-05f};
+	float cq4{-1.571196474560443e-05f};
 
 	matrix::Matrix<float, 4, 4> _G;
 
 	// Inertia Matrix aprroximation
-	float j_xx{0.003498867046865f};
+	float j_xx{0.003552615753189f};
 	float j_xy{0.0f};
 	float j_xz{0.0f};
 
 	float j_yx{0.0f};
-	float j_yy{0.003008494561582f};
+	float j_yy{0.002918812696132f};
 	float j_yz{0.0f};
 
 	float j_zx{0.0f};
 	float j_zy{0.0f};
-	float j_zz{0.053275169192962f};
+	float j_zz{0.049603326975651f};
 	matrix::Matrix<float, 3, 3> _J;
 
 	// bias
-	float b_xx{-1.634120845503633e-04f};
-	float b_yx{2.217947057785827e-04f};
-	float b_zx{4.813576318689553e-04f};
+	float b_xx{-9.671937125408884e-05f};
+	float b_yx{1.489010361409205e-04f};
+	float b_zx{7.238164187080055e-04f};
 	matrix::Matrix<float, 3, 1> _b;
 
 	// Damping matrix
-	float B_xx{-0.011379455584759f};
+	float B_xx{-0.008798938568816f};
 	float B_xy{0.0f};
 	float B_xz{0.0f};
 
 	float B_yx{0.0f};
-	float B_yy{-0.004655406935466f};
+	float B_yy{-0.004649558328340f};
 	float B_yz{0.0f};
 
 	float B_zx{0.0f};
 	float B_zy{0.0f};
-	float B_zz{0.017312098146423f};
+	float B_zz{0.012960283522786f};
 	matrix::Matrix<float, 3, 3> _B;
 
 
