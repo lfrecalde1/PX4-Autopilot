@@ -201,12 +201,12 @@ parameters:
                   where u (with value between actuator minimum and maximum)
                   is the output signal sent to the motor controller.
             type: float
-            decimal: 1
-            increment: 1
+            decimal: 5
+            increment: 0.01
             num_instances: *max_num_mc_motors
             min: 0
             max: 100
-            default: 6.5
+            default: 6.3
 
         CA_ROTOR${i}_KM:
             description:
@@ -217,7 +217,7 @@ parameters:
                   Use a positive value for a rotor with CCW rotation.
                   Use a negative value for a rotor with CW rotation.
             type: float
-            decimal: 3
+            decimal: 5
             increment: 0.01
             num_instances: *max_num_mc_motors
             min: -1

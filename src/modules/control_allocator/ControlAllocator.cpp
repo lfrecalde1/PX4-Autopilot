@@ -447,6 +447,7 @@ ControlAllocator::Run()
 			_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
 								_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
+			//PX4_INFO("Gains P: [%.3f]",(double)_control_allocation[i]->getActuatorMin());
 			if (_has_slew_rate) {
 				_control_allocation[i]->applySlewRateLimit(dt);
 			}
@@ -699,6 +700,12 @@ ControlAllocator::publish_actuator_controls()
 	for (int i = motors_idx; i < actuator_motors_s::NUM_CONTROLS; i++) {
 		actuator_motors.control[i] = NAN;
 	}
+
+	// Section to publish actuators output directly
+	//actuator_motors.control[0] = 0.8;
+	//actuator_motors.control[1] = 0.0;
+	//actuator_motors.control[2] = 0.0;
+	//actuator_motors.control[3] = 0.0;
 
 	_actuator_motors_pub.publish(actuator_motors);
 
