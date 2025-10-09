@@ -689,6 +689,12 @@ ControlAllocator::publish_actuator_controls()
 		float actuator_sp = _control_allocation[selected_matrix]->getActuatorSetpoint()(actuator_idx_matrix[selected_matrix]);
 		actuator_motors.control[motors_idx] = PX4_ISFINITE(actuator_sp) ? actuator_sp : NAN;
 
+		control_debug.x = static_cast<float>(_num_actuators[0]);
+		control_debug.y = static_cast<float>(actuator_motors_s::NUM_CONTROLS);
+
+		control_debug.timestamp = hrt_absolute_time();
+		_control_debug_pub.publish(control_debug);
+
 		if (stopped_motors & (1u << motors_idx)) {
 			actuator_motors.control[motors_idx] = NAN;
 		}
@@ -701,11 +707,38 @@ ControlAllocator::publish_actuator_controls()
 		actuator_motors.control[i] = NAN;
 	}
 
+	// Checkl for esc data
+	_vehicle_esc_sub.update(&_esc_status);
+
+	matrix::Vector4f motors_filt;
+	float rpm_to_normalized{1100.00f};
+
+	motors_filt(0) = _esc_status.esc[0].esc_rpm/rpm_to_normalized;
+	motors_filt(1) = _esc_status.esc[1].esc_rpm/rpm_to_normalized;
+	motors_filt(2) = _esc_status.esc[2].esc_rpm/rpm_to_normalized;
+	motors_filt(3) = _esc_status.esc[3].esc_rpm/rpm_to_normalized;
+
+	matrix::Vector4f motors_desired_normalized;
+	motors_desired_normalized(0) = 0.3f;
+	motors_desired_normalized(1) = 0.6f;
+	motors_desired_normalized(2) = 0.6f;
+	motors_desired_normalized(3) = 0.6f;
+
+	float error{0.0f};
+	float kp_motor_0{1.0f};
+	error = motors_desired_normalized(0) - motors_filt(0);
+	float control{0.0f};
+	control = kp_motor_0*error;
+
+	//control_debug.z = PX4_ISFINITE(motors_desired_normalized(0)) ? motors_desired_normalized(0) : 0.f;
+	
+
+
 	// Section to publish actuators output directly
-	//actuator_motors.control[0] = 0.8;
-	//actuator_motors.control[1] = 0.0;
-	//actuator_motors.control[2] = 0.0;
-	//actuator_motors.control[3] = 0.0;
+	actuator_motors.control[0] = motors_desired_normalized(0) + control;
+	actuator_motors.control[1] = 0.6;
+	actuator_motors.control[2] = 0.6;
+	actuator_motors.control[3] = 0.6;
 
 	_actuator_motors_pub.publish(actuator_motors);
 

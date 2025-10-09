@@ -78,6 +78,8 @@
 #include <uORB/topics/vehicle_thrust_setpoint.h>
 #include <uORB/topics/vehicle_status.h>
 #include <uORB/topics/failure_detector_status.h>
+#include <uORB/topics/esc_status.h>
+#include <uORB/topics/debug_vect.h>
 
 class ControlAllocator : public ModuleBase<ControlAllocator>, public ModuleParams, public px4::ScheduledWorkItem
 {
@@ -192,6 +194,14 @@ private:
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 	uORB::Subscription _vehicle_control_mode_sub{ORB_ID(vehicle_control_mode)};
 	uORB::Subscription _failure_detector_status_sub{ORB_ID(failure_detector_status)};
+
+	// New subcription and publisher to check variables
+	uORB::Subscription _vehicle_esc_sub{ORB_ID(esc_status)};
+	uORB::Publication<debug_vect_s> _control_debug_pub{ORB_ID(debug_vect)};
+
+	// ESC values
+	esc_status_s _esc_status{};
+	struct debug_vect_s control_debug;
 
 	matrix::Vector3f _torque_sp;
 	matrix::Vector3f _thrust_sp;

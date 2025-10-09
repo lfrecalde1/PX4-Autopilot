@@ -175,7 +175,7 @@ MulticopterRateControl::parameters_updated()
 	_B(2, 2) = B_zz;
 
 
-	strncpy(control_debug.name, "AngAcc", 10);
+	//strncpy(control_debug.name, "AngAcc", 10);
 }
 
 void
@@ -269,7 +269,7 @@ MulticopterRateControl::Run()
 		//Vector3f gyro_torque = _J*angular_accel + _b + _B*rates;
 		//Vector3f gyro_torque = _J*angular_accel;
 
-		matrix::Vector3f torque_imu = _J*angular_accel;
+		//matrix::Vector3f torque_imu = _J*angular_accel;
 		
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
@@ -377,13 +377,13 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(torque_from_rpm(0)) ? torque_from_rpm(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(torque_imu(0)) ? torque_imu(0) : 0.f;
-			control_debug.z = PX4_ISFINITE(torque_from_rpm(1)) ? torque_from_rpm(1) : 0.f;
+			//control_debug.x = PX4_ISFINITE(torque_from_rpm(0)) ? torque_from_rpm(0) : 0.f;
+			//control_debug.y = PX4_ISFINITE(torque_imu(0)) ? torque_imu(0) : 0.f;
+			//control_debug.z = PX4_ISFINITE(torque_from_rpm(1)) ? torque_from_rpm(1) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
-			control_debug.timestamp = hrt_absolute_time();
-			_control_debug_pub.publish(control_debug);
+			//control_debug.timestamp = hrt_absolute_time();
+			//_control_debug_pub.publish(control_debug);
 
 			// scale setpoints by battery status if enabled
 			if (_param_mc_bat_scale_en.get()) {

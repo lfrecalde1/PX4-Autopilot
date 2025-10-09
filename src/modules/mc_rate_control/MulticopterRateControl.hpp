@@ -63,7 +63,7 @@
 #include <string.h>
 
 // Library to publish the control actions
-#include <uORB/topics/debug_vect.h>
+//#include <uORB/topics/debug_vect.h>
 
 // Library for a filter
 #include <lib/mathlib/math/filter/LowPassFilter2p.hpp>
@@ -133,7 +133,7 @@ private:
 	uORB::Publication<vehicle_rates_setpoint_s>	_vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};
 
 	// Control actions publisher
-	uORB::Publication<debug_vect_s> _control_debug_pub{ORB_ID(debug_vect)};
+	//uORB::Publication<debug_vect_s> _control_debug_pub{ORB_ID(debug_vect)};
 	//
 
 
@@ -149,7 +149,7 @@ private:
 	vehicle_angular_acceleration_setpoint_s _vehicle_angular_acceleration_setpoint{};
 
 	// Publisher control actions
-	struct debug_vect_s control_debug;
+	//struct debug_vect_s control_debug;
 
 	// Parameters
 	bool _landed{true};
