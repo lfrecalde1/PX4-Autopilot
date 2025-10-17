@@ -247,12 +247,20 @@ MulticopterRateControl::Run()
 
 		// updates Estimation of force and torques
 		constexpr float RPM_TO_RAD_S = M_PI_F / 30.f;		
+		constexpr float RAW_TO_RPM = 0.01f;		
 
 		matrix::Vector4f motors_filt;
 		motors_filt(0) = _rpm_filter[0].apply(_esc_status.esc[0].esc_rpm) * RPM_TO_RAD_S;
 		motors_filt(1) = _rpm_filter[1].apply(_esc_status.esc[1].esc_rpm) * RPM_TO_RAD_S;
 		motors_filt(2) = _rpm_filter[2].apply(_esc_status.esc[2].esc_rpm) * RPM_TO_RAD_S;
 		motors_filt(3) = _rpm_filter[3].apply(_esc_status.esc[3].esc_rpm) * RPM_TO_RAD_S;
+
+		// Motor Mapping RPM REAL
+		matrix::Vector4f motors_real_rpm;
+		motors_real_rpm(0) = _esc_status.esc[0].esc_rpm * RAW_TO_RPM;
+		motors_real_rpm(1) = _esc_status.esc[1].esc_rpm * RAW_TO_RPM;
+		motors_real_rpm(2) = _esc_status.esc[2].esc_rpm * RAW_TO_RPM;
+		motors_real_rpm(3) = _esc_status.esc[3].esc_rpm * RAW_TO_RPM;
 
 		matrix::Vector4f motor_filt_square;
 		for (int i = 0; i < 4; ++i) {
@@ -267,7 +275,7 @@ MulticopterRateControl::Run()
 		// Computing torque from angular velocity
 		Vector3f gyro_torque = _J*angular_accel + rates % (_J * rates) + _b + _B*rates;
 
-		Vector3f torque_disturbance = torque_from_rpm - gyro_torque;
+		//Vector3f torque_disturbance = torque_from_rpm - gyro_torque;
 
 		if (_vehicle_control_mode.flag_control_manual_enabled && !_vehicle_control_mode.flag_control_attitude_enabled) {
 			// generate the rate setpoint from sticks
@@ -360,9 +368,9 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(torque_disturbance(0)) ? torque_disturbance(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(torque_disturbance(1)) ? torque_disturbance(1) : 0.f;
-			control_debug.z = PX4_ISFINITE(torque_disturbance(2)) ? torque_disturbance(2) : 0.f;
+			control_debug.x = PX4_ISFINITE(motors_real_rpm(0)) ? motors_real_rpm(0) : 0.f;
+			control_debug.y = PX4_ISFINITE(motors_real_rpm(1)) ? motors_real_rpm(1) : 0.f;
+			control_debug.z = PX4_ISFINITE(motors_real_rpm(2)) ? motors_real_rpm(2) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
 			control_debug.timestamp = hrt_absolute_time();
