@@ -100,6 +100,11 @@ ControlAllocator::init()
 		return false;
 	}
 
+	motors_rpm_to_action(0) = 0.0f;
+	motors_rpm_to_action(1) = 0.0f;
+	motors_rpm_to_action(2) = 0.0f;
+	motors_rpm_to_action(3) = 0.0f;
+
 #ifndef ENABLE_LOCKSTEP_SCHEDULER // Backup schedule would interfere with lockstep
 	ScheduleDelayed(50_ms);
 #endif
@@ -683,9 +688,11 @@ ControlAllocator::publish_actuator_controls()
 	// motors
 	int motors_idx;
 
+	float desired{0.3f};
 	for (motors_idx = 0; motors_idx < _num_actuators[0] && motors_idx < actuator_motors_s::NUM_CONTROLS; motors_idx++) {
 		int selected_matrix = _control_allocation_selection_indexes[actuator_idx];
 		float actuator_sp = _control_allocation[selected_matrix]->getActuatorSetpoint()(actuator_idx_matrix[selected_matrix]);
+		desired = actuator_sp;
 		actuator_motors.control[motors_idx] = PX4_ISFINITE(actuator_sp) ? actuator_sp : NAN;
 
 		if (stopped_motors & (1u << motors_idx)) {
@@ -699,7 +706,46 @@ ControlAllocator::publish_actuator_controls()
 	for (int i = motors_idx; i < actuator_motors_s::NUM_CONTROLS; i++) {
 		actuator_motors.control[i] = NAN;
 	}
+	// Checkl for esc data
+	_vehicle_esc_sub.update(&_esc_status);
 
+	float a{2.388481782023000e-05f};
+	float b{-0.050819943530684f};
+
+	motors_rpm_to_action(0) = _esc_status.esc[0].esc_rpm * a + b;
+	motors_rpm_to_action(1) = _esc_status.esc[1].esc_rpm * a + b;
+	motors_rpm_to_action(2) = _esc_status.esc[2].esc_rpm * a + b;
+	motors_rpm_to_action(3) = _esc_status.esc[3].esc_rpm * a + b;
+
+	if (motors_rpm_to_action(0) < 0.f ||
+    motors_rpm_to_action(1) < 0.f ||
+    motors_rpm_to_action(2) < 0.f ||
+    motors_rpm_to_action(3) < 0.f) {
+    motors_rpm_to_action.setAll(0.001f);
+}
+
+
+	float error{0.0f};
+	float kp_motor_0{0.8f};
+
+	error = desired - motors_rpm_to_action(2);
+	law = desired + kp_motor_0 * error;
+
+if (law < 0.f){
+	law = 0.001;
+}
+
+
+	// Update the rpm to action mappping 
+	control_debug.x = PX4_ISFINITE(desired) ? desired : 0.f;
+	control_debug.y = PX4_ISFINITE(law) ? law : 0.f;
+	control_debug.z = PX4_ISFINITE(motors_rpm_to_action(2)) ? motors_rpm_to_action(2) : 0.f;
+	
+	control_debug.timestamp = hrt_absolute_time();
+	_control_debug_pub.publish(control_debug);
+
+	// Send Control actions to the motors between 0-1
+	actuator_motors.control[0] = law;
 	_actuator_motors_pub.publish(actuator_motors);
 
 	// servos
@@ -845,8 +891,20 @@ int ControlAllocator::print_status()
 			 _handled_motor_failure_bitmask);
 	}
 
+
+
 	// Print perf
 	perf_print_counter(_loop_perf);
+
+	PX4_INFO("motors_rpm_to_action = [%.3f %.3f %.3f %.3f]",
+             (double)motors_rpm_to_action(0),
+             (double)motors_rpm_to_action(1),
+             (double)motors_rpm_to_action(2),
+             (double)motors_rpm_to_action(3));
+
+
+	PX4_INFO("Control Law = [%.3f]",
+             (double)law);
 
 	return 0;
 }

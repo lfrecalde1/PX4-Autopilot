@@ -175,7 +175,7 @@ MulticopterRateControl::parameters_updated()
 	_B(2, 2) = B_zz;
 
 
-	strncpy(control_debug.name, "AngAcc", 10);
+	//strncpy(control_debug.name, "AngAcc", 10);
 }
 
 void
@@ -368,13 +368,13 @@ MulticopterRateControl::Run()
 			vehicle_torque_setpoint.xyz[2] = PX4_ISFINITE(torque_setpoint(2)) ? torque_setpoint(2) : 0.f;
 
 			// Section to publish the control actions
-			control_debug.x = PX4_ISFINITE(motors_real_rpm(0)) ? motors_real_rpm(0) : 0.f;
-			control_debug.y = PX4_ISFINITE(motors_real_rpm(1)) ? motors_real_rpm(1) : 0.f;
-			control_debug.z = PX4_ISFINITE(motors_real_rpm(2)) ? motors_real_rpm(2) : 0.f;
+			//control_debug.x = PX4_ISFINITE(motors_real_rpm(0)) ? motors_real_rpm(0) : 0.f;
+			//control_debug.y = PX4_ISFINITE(motors_real_rpm(1)) ? motors_real_rpm(1) : 0.f;
+			//control_debug.z = PX4_ISFINITE(motors_real_rpm(2)) ? motors_real_rpm(2) : 0.f;
 			
 			// Publishing desired angular accelerations or torque
-			control_debug.timestamp = hrt_absolute_time();
-			_control_debug_pub.publish(control_debug);
+			//control_debug.timestamp = hrt_absolute_time();
+			//_control_debug_pub.publish(control_debug);
 
 			// scale setpoints by battery status if enabled
 			if (_param_mc_bat_scale_en.get()) {

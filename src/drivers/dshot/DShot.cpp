@@ -225,8 +225,8 @@ int DShot::handle_new_telemetry_data(const int telemetry_index, const DShotTelem
 		if (!ignore_rpm) {
 			// If we also have bidirectional dshot, we use rpm and timestamps from there.
 			esc_status.esc[telemetry_index].timestamp       = data.time;
-			esc_status.esc[telemetry_index].esc_rpm         = (static_cast<int>(data.erpm) * 1) /
-					(_param_mot_pole_count.get() / 2);
+			esc_status.esc[telemetry_index].esc_rpm         = ((static_cast<int>(data.erpm) * 100) /
+					(_param_mot_pole_count.get() / 2))*0.01f;
 		}
 
 		esc_status.esc[telemetry_index].esc_voltage     = static_cast<float>(data.voltage) * 0.01f;
@@ -316,7 +316,7 @@ int DShot::handle_new_bdshot_erpm(void)
 				num_erpms++;
 				esc_status.esc_online_flags |= 1 << telemetry_index;
 				esc_status.esc[telemetry_index].timestamp = hrt_absolute_time();
-				esc_status.esc[telemetry_index].esc_rpm = (erpm * 1) / (_param_mot_pole_count.get() / 2);
+				esc_status.esc[telemetry_index].esc_rpm = ((erpm * 100) / (_param_mot_pole_count.get() / 2))*0.01f;
 				esc_status.esc[telemetry_index].actuator_function = _actuator_functions[telemetry_index];
 			}
 
